@@ -1,0 +1,184 @@
++ lowdb:là một JSON database nhỏ cho các ứng dụng node, electron or browser, đơn giản hơn thì lowdb cho phép bạn 
+lưu database dạng JSON dưới dạng file hoặc cũng có thể là localstorage. Cho phép bạn custom adapter hoặc encrypt data
+
+Cách sử dụng lowdb
+const low = require('lowdb')
+const FileSync = require('lowdb/adapters/FileSync')
+const adapter = new FileSync('database.json')      => Một file database.json sẽ được tạo cho bạn ngay tại thư mục root (có thể đổi tên khác)
+const db = low(adapter)                            => Ở đây chúng ta dùng JSON files để lưu, cũng có thể sử dụng localStorage để thay thế cho FileSync adapter   
+
+db.defaults({ posts: [] }).write() // đoạn này để set default trong file json ta có một mạng posts rỗng
+
+module.exports = db
+
+// Link tham khảo: https://viblo.asia/p/lowdb-giai-phap-cho-viec-su-dung-database-nho-gon-cho-cac-pet-project-voi-nodejs-electron-4P856LQaZY3
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+CORS là gì?
+CORS là một cơ chế cho phép nhiều tài nguyên khác nhau (fonts, Javascript, v.v…) của một trang web có thể được truy vấn từ domain khác với domain của trang đó. CORS là viết tắt của từ Cross-origin resource sharing.
+
+// Link tham khảo: https://topdev.vn/blog/cors-la-gi/
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+morgan là một công cụ ghi log tuyệt vời mà bất kỳ ai làm việc với server HTTP trong Node.js nên học cách sử dụng. 
+morgan là một phần mềm trung gian cho phép ta dễ dàng ghi lại các yêu cầu, lỗi và hơn thế nữa vào console . 
+Nó dễ sử dụng, nhưng vẫn mạnh mẽ và có thể tùy chỉnh.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+// Định nghĩa schemas
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Book:
+ *       type: object
+ *       required:
+ *         - title
+ *         - author
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The auto-generated id of the book
+ *         title:
+ *           type: string
+ *           description: The book title
+ *         author:
+ *           type: string
+ *           description: The book author
+ *       example:
+ *         id: d5fE_asz
+ *         title: The New Turing Omnibus
+ *         author: Alexander K. Dewdney
+ */
+
+// Định nghĩa route mặc định
+
+/**
+  * @swagger
+  * tags:
+  *   name: Books                                        // root gốc cha.
+  *   description: The books managing API
+  */
+
+
+/**
+ * @swagger
+ * /books:
+ *   get:
+ *     summary: Returns the list of all the books
+ *     tags: [Books]                                     // Nằm dưới root gốc cha
+ *     responses:                                        
+ *       200:
+ *         description: The list of the books
+ *         content:
+ *           application/json:                           
+ *             schema:
+ *               type: array                             // Trả về 1 mảng
+ *               items:                                  // Trong mảng này lại chứa mỗi 1 đối tượng là object
+ *                 $ref: '#/components/schemas/Book'     // Tham chiếu ngược lên schemas
+ */
+
+
+/**
+ * @swagger
+ * /books/{id}:
+ *   get:
+ *     summary: Get the book by id
+ *     tags: [Books]
+ *     parameters:
+ *       - in: path            // Tham số nằm trong đường dẫn
+ *         name: id            // Name của tham số là id
+ *         schema:
+ *           type: string      // Kiểu dữ liệu của tham số là id
+ *         required: true      // Bắt buộc phải có
+ *         description: The book id
+ *     responses:
+ *       200:
+ *         description: The book description by id
+ *         contens:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Book'
+ *       404:
+ *         description: The book was not found
+ */
+
+
+ /**
+ * @swagger
+ * /books:
+ *   post:
+ *     summary: Create a new book
+ *     tags: [Books]
+ *     requestBody:
+ *       required: true                             // Bắt buộc phải có dữ liệu
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Book'
+ *     responses:
+ *       200:
+ *         description: The book was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Book'
+ *       500:
+ *         description: Some server error
+ */
+
+/**
+ * @swagger
+ * /books/{id}:
+ *  put:
+ *    summary: Update the book by the id
+ *    tags: [Books]
+ *    parameters: 
+ *      - in: path                                   
+ *        name: id
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: The book id
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Book'
+ *    responses:
+ *      200:
+ *        description: The book was updated
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Book'
+ *      404:
+ *        description: The book was not found
+ *      500:
+ *        description: Some error happened
+ */
+
+ /**
+ * @swagger
+ * /books/{id}:
+ *   delete:
+ *     summary: Remove the book by id
+ *     tags: [Books]
+ *     parameters:
+ *       - in: path                                                  // Tham số nằm trong đường dẫn
+ *         name: id                                                  // Name của tham số là id 
+ *         schema:
+ *           type: string                                            // Kiểu dữ liệu của tham số là id
+ *         required: true                                            // Bắt buộc phải có
+ *         description: The book id
+ * 
+ *     responses:
+ *       200:
+ *         description: The book was deleted
+ *       404:
+ *         description: The book was not found
+ */
